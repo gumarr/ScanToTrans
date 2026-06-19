@@ -1,0 +1,448 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg-primary: #0a0a12;
+        --bg-secondary: #12121e;
+        --bg-card: rgba(22, 22, 40, 0.7);
+        --bg-input: rgba(18, 18, 32, 0.85);
+        --border-subtle: rgba(138, 100, 255, 0.15);
+        --border-focus: rgba(138, 100, 255, 0.5);
+        --text-primary: #e8e4f0;
+        --text-secondary: #9d95b0;
+        --text-muted: #6b6280;
+        --accent-gradient: linear-gradient(135deg, #7c3aed, #3b82f6);
+        --accent-gradient-hover: linear-gradient(135deg, #8b5cf6, #60a5fa);
+        --accent-solid: #7c3aed;
+        --danger: #f43f5e;
+        --danger-hover: #fb7185;
+        --success: #34d399;
+        --link: #818cf8;
+        --link-hover: #a5b4fc;
+        --glow-purple: rgba(124, 58, 237, 0.2);
+        --glow-blue: rgba(59, 130, 246, 0.15);
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-size: 14px;
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        background-image:
+          radial-gradient(ellipse at 20% 0%, var(--glow-purple) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, var(--glow-blue) 0%, transparent 50%);
+        min-height: 100vh;
+        padding: 24px;
+        overflow-y: auto;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(124, 58, 237, 0.3);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(124, 58, 237, 0.5); }
+
+      /* Header */
+      h1 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.3px;
+      }
+
+      /* Section label */
+      label {
+        display: block;
+        margin: 16px 0 6px;
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--text-secondary);
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+      }
+
+      /* Inputs & Selects */
+      select, input, textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        font: inherit;
+        font-size: 13px;
+        box-sizing: border-box;
+        resize: vertical;
+        background: var(--bg-input);
+        color: var(--text-primary);
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        outline: none;
+        -webkit-appearance: none;
+      }
+
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239d95b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 32px;
+        cursor: pointer;
+      }
+
+      select option {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+      }
+
+      select:focus, input:focus, textarea:focus {
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+      }
+
+      textarea::placeholder, input::placeholder {
+        color: var(--text-muted);
+      }
+
+      /* Row layout */
+      .row { display: flex; gap: 14px; }
+      .row > div { flex: 1; }
+
+      /* Buttons */
+      button {
+        margin-top: 20px;
+        padding: 11px 24px;
+        border: none;
+        border-radius: 10px;
+        background: var(--accent-gradient);
+        color: #fff;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        letter-spacing: 0.3px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      button::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--accent-gradient-hover);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      button:hover::before { opacity: 1; }
+      button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
+      }
+      button:active { transform: translateY(0); }
+
+      /* Hint text */
+      .hint {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        line-height: 1.5;
+      }
+
+      /* Key list */
+      #keyList { margin-bottom: 8px; }
+
+      .key-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--bg-card);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        padding: 8px 12px;
+        margin-bottom: 6px;
+        font-size: 13px;
+        transition: border-color 0.2s ease, background 0.2s ease;
+      }
+
+      .key-row:hover {
+        border-color: rgba(138, 100, 255, 0.3);
+        background: rgba(30, 30, 56, 0.8);
+      }
+
+      .key-row code {
+        font-family: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+        color: var(--link);
+        font-size: 13px;
+      }
+
+      .key-row .del {
+        border: none;
+        background: rgba(244, 63, 94, 0.1);
+        color: var(--danger);
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 10px;
+        margin-top: 0;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+      }
+
+      .key-row .del::before { display: none; }
+
+      .key-row .del:hover {
+        background: rgba(244, 63, 94, 0.2);
+        color: var(--danger-hover);
+        transform: none;
+        box-shadow: none;
+      }
+
+      .key-empty {
+        font-size: 12px;
+        color: var(--text-muted);
+        padding: 6px 0;
+        font-style: italic;
+      }
+
+      /* Status */
+      #status {
+        margin-top: 14px;
+        font-size: 13px;
+        color: var(--success);
+        min-height: 18px;
+        font-weight: 500;
+      }
+
+      /* Links */
+      a {
+        color: var(--link);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+      a:hover { color: var(--link-hover); text-decoration: underline; }
+
+      /* Key state badge */
+      #keyState {
+        font-weight: 400;
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+
+      /* Cloud state */
+      #cloudState { font-weight: 500; }
+
+      /* Hotkey footer */
+      .footer-hint {
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-subtle);
+      }
+
+      .footer-hint b {
+        color: var(--link);
+        font-weight: 600;
+      }
+
+      /* Section separator */
+      .section {
+        background: var(--bg-card);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-subtle);
+        border-radius: 14px;
+        padding: 16px 18px;
+        margin-bottom: 14px;
+      }
+
+      .section label:first-child { margin-top: 0; }
+
+      /* Subtle animation on load */
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .section {
+        animation: fadeInUp 0.4s ease forwards;
+      }
+      .section:nth-child(2) { animation-delay: 0.05s; }
+      .section:nth-child(3) { animation-delay: 0.1s; }
+      .section:nth-child(4) { animation-delay: 0.15s; }
+      .section:nth-child(5) { animation-delay: 0.2s; }
+      .section:nth-child(6) { animation-delay: 0.25s; }
+
+      /* Hotkey recorder */
+      .hotkey-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      #hotkeyDisplay {
+        flex: 1;
+        padding: 10px 14px;
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        background: var(--bg-input);
+        color: var(--text-primary);
+        font-family: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        outline: none;
+        text-align: center;
+        user-select: none;
+      }
+
+      #hotkeyDisplay:focus,
+      #hotkeyDisplay.recording {
+        border-color: var(--accent-solid);
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2), 0 0 16px rgba(124, 58, 237, 0.15);
+        background: rgba(124, 58, 237, 0.08);
+      }
+
+      #hotkeyDisplay.recording {
+        animation: pulseGlow 1.5s ease-in-out infinite;
+      }
+
+      @keyframes pulseGlow {
+        0%, 100% { box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2); }
+        50% { box-shadow: 0 0 0 5px rgba(124, 58, 237, 0.35), 0 0 20px rgba(124, 58, 237, 0.2); }
+      }
+
+      .hotkey-reset {
+        padding: 10px 14px;
+        margin-top: 0;
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        background: rgba(30, 30, 56, 0.6);
+        color: var(--text-secondary);
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .hotkey-reset::before { display: none; }
+
+      .hotkey-reset:hover {
+        border-color: rgba(138, 100, 255, 0.3);
+        color: var(--text-primary);
+        background: rgba(40, 40, 70, 0.8);
+        transform: none;
+        box-shadow: none;
+      }
+
+      #hotkeyStatus {
+        font-size: 12px;
+        margin-top: 6px;
+        min-height: 16px;
+        font-weight: 500;
+      }
+      #hotkeyStatus.ok { color: var(--success); }
+      #hotkeyStatus.err { color: var(--danger); }
+    </style>
+  </head>
+  <body>
+    <h1>⚡ ScanToTrans — Cài đặt</h1>
+
+    <div class="section">
+      <div class="row">
+        <div>
+          <label>Ngôn ngữ nguồn (OCR)</label>
+          <select id="sourceLang">
+            <option value="eng">English (eng)</option>
+            <option value="vie">Tiếng Việt (vie)</option>
+            <option value="jpn">日本語 (jpn)</option>
+            <option value="chi_sim">简体中文 (chi_sim)</option>
+            <option value="chi_tra">繁體中文 (chi_tra)</option>
+            <option value="kor">한국어 (kor)</option>
+          </select>
+          <div class="hint">Bắt buộc chọn — không auto-detect</div>
+        </div>
+        <div>
+          <label>Dịch sang</label>
+          <select id="targetLang">
+            <option value="vi">Tiếng Việt</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+            <option value="zh-CN">简体中文</option>
+            <option value="ko">한국어</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>Gemini API Keys <span id="keyState" style="font-weight:400;color:var(--text-muted)"></span></label>
+      <div id="keyList"></div>
+
+      <textarea id="geminiKeys" rows="2" placeholder="Thêm key mới (mỗi dòng 1 key)..."></textarea>
+      <div class="hint">
+        Lấy free key tại <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>.
+        Nhiều key (mỗi key 1 Google project) → app tự xoay vòng khi 1 key hết hạn mức.
+      </div>
+    </div>
+
+    <div class="section">
+      <label>Model</label>
+      <select id="geminiModel">
+        <option value="gemini-2.5-flash">Gemini 2.5 Flash (cân bằng)</option>
+        <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite (nhanh, quota cao hơn)</option>
+        <option value="gemini-3.5-flash">Gemini 3.5 Flash (thông minh hơn)</option>
+      </select>
+      <div class="hint">
+        Free tier ~10 req/phút, ~250 req/ngày. Hết tất cả key Gemini → app tự chuyển sang Google Translate.
+      </div>
+    </div>
+
+    <div class="section">
+      <label>Google Cloud Translation Key (fallback)</label>
+      <input id="cloudKey" type="password" placeholder="Để trống nếu không dùng fallback..." />
+      <div class="hint">
+        Dùng khi Gemini hết hạn mức. Free 500k ký tự/tháng (~3.300+ lần dịch).
+        Cần bật Cloud Translation API + billing trên
+        <a href="https://console.cloud.google.com/apis/library/translate.googleapis.com" target="_blank">Google Cloud</a>.
+        Sang ngày mới (giờ Pacific) app tự về lại Gemini. <span id="cloudState"></span>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>Hotkey chụp & dịch</label>
+      <div class="hotkey-row">
+        <div id="hotkeyDisplay" tabindex="0">Ctrl+Alt+T</div>
+        <button class="hotkey-reset" id="hotkeyReset" title="Khôi phục mặc định">⟲ Mặc định</button>
+      </div>
+      <div class="hint">Click vào ô rồi nhấn tổ hợp phím mới. Cần ít nhất 1 modifier (Ctrl/Alt/Shift) + 1 phím thường.</div>
+      <div id="hotkeyStatus"></div>
+    </div>
+
+    <button id="save">💾 Lưu cài đặt</button>
+    <div id="status"></div>
+
+    <div class="hint footer-hint">
+      Hotkey: <b id="footerHotkey">Ctrl+Alt+T</b> chụp & dịch · <b>Ctrl+Alt+S</b> mở cài đặt
+    </div>
+
+    <script type="module" src="./settings.js"></script>
+  </body>
+</html>

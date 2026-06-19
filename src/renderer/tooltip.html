@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Result</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg-card: rgba(14, 14, 28, 0.92);
+        --border-card: rgba(138, 100, 255, 0.2);
+        --text-primary: #e8e4f0;
+        --text-src: #9d95b0;
+        --text-meta: #6b6280;
+        --accent-gradient: linear-gradient(135deg, #7c3aed, #3b82f6);
+        --danger: #f87171;
+        --spin: #818cf8;
+        --link: #818cf8;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font: 13px/1.5 'Inter', system-ui, -apple-system, sans-serif;
+        background: transparent;
+      }
+
+      #card {
+        background: var(--bg-card);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        color: var(--text-primary);
+        border: 1px solid var(--border-card);
+        border-radius: 14px;
+        padding: 14px 16px;
+        height: 100vh;
+        overflow: auto;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(124, 58, 237, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        position: relative;
+      }
+
+      /* Scrollbar inside card */
+      #card::-webkit-scrollbar { width: 4px; }
+      #card::-webkit-scrollbar-track { background: transparent; }
+      #card::-webkit-scrollbar-thumb {
+        background: rgba(124, 58, 237, 0.3);
+        border-radius: 2px;
+      }
+
+      .src {
+        color: var(--text-src);
+        font-size: 12px;
+        margin-bottom: 10px;
+        white-space: pre-wrap;
+        max-height: 60px;
+        overflow: auto;
+        padding: 8px 10px;
+        background: rgba(18, 18, 36, 0.6);
+        border-radius: 8px;
+        border: 1px solid rgba(138, 100, 255, 0.1);
+      }
+
+      .trans {
+        font-size: 15px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        font-weight: 500;
+      }
+
+      .meta {
+        margin-top: 10px;
+        font-size: 11px;
+        color: var(--text-meta);
+        padding-top: 8px;
+        border-top: 1px solid rgba(138, 100, 255, 0.1);
+      }
+
+      .err { color: var(--danger); font-weight: 500; }
+
+      .spin {
+        color: var(--spin);
+        font-weight: 500;
+      }
+
+      /* Spin animation dot */
+      .spin::after {
+        content: '';
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        margin-left: 6px;
+        border-radius: 50%;
+        background: var(--spin);
+        animation: pulse 1s ease-in-out infinite;
+        vertical-align: middle;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.3; transform: scale(0.8); }
+        50% { opacity: 1; transform: scale(1.2); }
+      }
+
+      .btn {
+        margin-top: 10px;
+        padding: 6px 14px;
+        border: none;
+        border-radius: 8px;
+        background: var(--accent-gradient);
+        color: #fff;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+      }
+
+      #close {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        cursor: pointer;
+        color: var(--text-meta);
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+      }
+      #close:hover {
+        color: var(--danger);
+        background: rgba(244, 63, 94, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="card">
+      <span id="close">×</span>
+      <div id="body"><span class="spin">Đang xử lý…</span></div>
+    </div>
+    <script type="module" src="./tooltip.js"></script>
+  </body>
+</html>
