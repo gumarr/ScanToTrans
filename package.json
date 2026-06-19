@@ -3,20 +3,59 @@
   "version": "0.1.0",
   "description": "Chụp vùng màn hình → OCR → dịch bằng AI → hiển thị tooltip",
   "main": "./out/main/index.js",
-  "author": "",
+  "author": "gumarr",
   "license": "MIT",
   "scripts": {
     "dev": "node scripts/run.mjs dev",
     "build": "electron-vite build",
     "preview": "node scripts/run.mjs preview",
-    "start": "node scripts/run.mjs preview"
+    "start": "node scripts/run.mjs preview",
+    "dist:win": "electron-vite build && electron-builder --win --publish never"
   },
   "dependencies": {
+    "electron-updater": "^6.6.2",
     "tesseract.js": "^5.1.1"
   },
   "devDependencies": {
     "electron": "^33.0.0",
+    "electron-builder": "^25.1.8",
     "electron-vite": "^2.3.0",
     "vite": "^5.4.0"
+  },
+  "build": {
+    "appId": "com.gumarr.scantotrans",
+    "productName": "ScanToTrans",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "out/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "gumarr",
+      "repo": "ScanToTrans"
+    }
   }
 }

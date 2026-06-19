@@ -3,6 +3,7 @@ import { join } from 'path'
 import { recognize, disposeOcr } from './ocr.js'
 import { translate } from './translate.js'
 import { getConfig, setConfig, addGeminiKeys, removeGeminiKey, setCloudTranslateKey } from './config.js'
+import { initAutoUpdater } from './updater.js'
 
 // Lưu accelerator hiện tại của hotkey chụp để có thể unregister khi đổi
 let currentCaptureHotkey = null
@@ -205,6 +206,9 @@ app.whenReady().then(() => {
   globalShortcut.register('CommandOrControl+Alt+S', () => { openSettings() })
   // mở settings lần đầu để người dùng nhập key + chọn ngôn ngữ
   openSettings()
+
+  // Khởi chạy auto-updater (chỉ hoạt động trong bản đóng gói)
+  initAutoUpdater()
 })
 
 app.on('will-quit', () => {
