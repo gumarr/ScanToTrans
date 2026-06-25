@@ -1,10 +1,12 @@
 import { getGeminiKeys, getConfig } from './config.js'
 import { translateGoogle, hasCloudTranslate } from './google-translate.js'
+import { translateGoogleFree } from './google-free-translate.js'
 
 // Dịch theo TẦNG fallback:
 //   1. Gemini (xoay vòng nhiều key khi gặp 429)
-//   2. Cạn key Gemini / tất cả 429 → Google Cloud Translation (fallback)
-//   3. Sang ngày mới (giờ Pacific — Gemini reset quota nửa đêm PT) → thử lại Gemini từ đầu
+//   2. Cạn key Gemini / tất cả 429 → Google Cloud Translation (nếu có key)
+//   3. Không có Cloud key (hoặc Cloud cũng lỗi) → Google Translate "free" (không cần key)
+//   4. Sang ngày mới (giờ Pacific — Gemini reset quota nửa đêm PT) → thử lại Gemini từ đầu
 //
 // Để không phí thời gian thử lại Gemini suốt cả ngày sau khi đã 429, ta nhớ "ngày Gemini
 // kiệt quota" và bỏ qua Gemini cho tới khi sang ngày Pacific mới.
@@ -129,7 +131,7 @@ async function tryGemini(prompt, model) {
 }
 
 /**
- * @returns {Promise<{ text: string, provider: 'gemini'|'google' }>}
+ * @returns {Promise<{ text: string, provider: 'gemini'|'google'|'google-free' }>}
  */
 export async function translate(text, { to }) {
   if (!text || !text.trim()) return { text: '', provider: 'gemini' }
@@ -154,19 +156,25 @@ export async function translate(text, { to }) {
     }
   }
 
-  // Tầng fallback: Google Cloud Translation
+  // Tầng fallback 2: Google Cloud Translation (chỉ khi có key)
   if (cloudAvailable) {
     try {
       const out = await translateGoogle(text, { to })
       return { text: out, provider: 'google' }
     } catch (gErr) {
-      throw new TranslateError(`Gemini hết hạn mức và Google Translate cũng lỗi: ${gErr.message}`, { kind: gErr.kind || 'unknown' })
+      // Cloud cũng lỗi → vẫn còn phao cứu sinh free bên dưới
     }
   }
 
-  // Không có Cloud fallback
-  throw new TranslateError(
-    'Gemini đã hết hạn mức hôm nay. Thêm Cloud Translation key (hoặc thêm Gemini key) trong Settings để có fallback.',
-    { kind: 'quota' }
-  )
+  // Tầng fallback 3 (cuối cùng): Google Translate "free" — không cần key, luôn sẵn sàng.
+  // Đây là phao cứu sinh khi Gemini cạn quota và không có (hoặc lỗi) Cloud Translation key.
+  try {
+    const out = await translateGoogleFree(text, { to })
+    return { text: out, provider: 'google-free' }
+  } catch (fErr) {
+    throw new TranslateError(
+      `Gemini hết hạn mức và Google Translate (free) cũng lỗi: ${fErr.message}`,
+      { kind: fErr.kind || 'unknown' }
+    )
+  }
 }

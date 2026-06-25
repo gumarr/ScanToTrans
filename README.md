@@ -18,9 +18,10 @@ Lần đầu mở app sẽ hiện cửa sổ **Settings** — nhập Gemini API 
 ### Dịch & fallback theo tầng
 1. **Gemini** (chất lượng cao nhất). Có thể nhập **nhiều key** (mỗi dòng 1 key, mỗi key 1 Google project) → app tự xoay vòng khi 1 key gặp 429.
 2. Cạn hết key Gemini → **Google Cloud Translation** (fallback, free 500k ký tự/tháng — cần bật API + billing, nhập key trong Settings).
-3. Sang ngày mới (giờ Pacific — Gemini reset quota nửa đêm PT) → app tự về lại Gemini.
+3. Không có Cloud key (hoặc Cloud cũng lỗi) → **Google Translate (free)** — không cần key, luôn sẵn sàng làm phao cứu sinh. Endpoint không chính thức nên có thể bị giới hạn theo IP (429); chỉ dùng khi các tầng trên đều hết.
+4. Sang ngày mới (giờ Pacific — Gemini reset quota nửa đêm PT) → app tự về lại Gemini.
 
-Tooltip hiển thị provider đang dùng (Gemini / Google Translate) để biết khi nào đã fallback.
+Tooltip hiển thị provider đang dùng (Gemini / Google Translate / Google Translate (free)) để biết khi nào đã fallback.
 
 ## Hotkey
 

@@ -1,6 +1,6 @@
 {
   "name": "scantotrans",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Chụp vùng màn hình → OCR → dịch bằng AI → hiển thị tooltip",
   "main": "./out/main/index.js",
   "author": "gumarr",

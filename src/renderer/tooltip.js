@@ -9,6 +9,7 @@ function esc(s) {
 function meta(t, provider) {
   const parts = []
   if (provider === 'google') parts.push('Google Translate')
+  else if (provider === 'google-free') parts.push('Google Translate (free)')
   else if (provider === 'gemini') parts.push('Gemini')
   if (t?.ocr != null) parts.push(`OCR ${t.ocr}ms`)
   if (t?.translate != null) parts.push(`Dịch ${t.translate}ms`)
