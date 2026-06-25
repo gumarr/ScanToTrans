@@ -45,6 +45,7 @@
       "icon": "build/icon.ico"
     },
     "nsis": {
+      "artifactName": "ScanToTrans-Setup-${version}.exe",
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
